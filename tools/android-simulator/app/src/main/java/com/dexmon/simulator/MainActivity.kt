@@ -2,6 +2,7 @@ package com.dexmon.simulator
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.dexmon.simulator.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -20,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // No UI: fire-and-forget simulation on launch
+        setContentView(R.layout.activity_main)
         val baseUrl = System.getenv("RECEIVER_BASE_URL") ?: "http://10.0.2.2:8081"
         val sensorId = UUID.randomUUID().toString()
         val userId = UUID.randomUUID().toString()
