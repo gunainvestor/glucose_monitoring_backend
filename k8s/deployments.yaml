@@ -1,0 +1,146 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: glucose-receiver
+  namespace: dexmon
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: glucose-receiver
+  template:
+    metadata:
+      labels:
+        app: glucose-receiver
+    spec:
+      containers:
+        - name: app
+          image: ghcr.io/example/glucose-receiver:latest
+          ports:
+            - containerPort: 8081
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: kafka.dexmon.svc.cluster.local:9092
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: glucose-processor
+  namespace: dexmon
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: glucose-processor
+  template:
+    metadata:
+      labels:
+        app: glucose-processor
+    spec:
+      containers:
+        - name: app
+          image: ghcr.io/example/glucose-processor:latest
+          ports:
+            - containerPort: 8082
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: kafka.dexmon.svc.cluster.local:9092
+            - name: DB_HOST
+              value: timescaledb.dexmon.svc.cluster.local
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: dexmon
+            - name: DB_USER
+              value: postgres
+            - name: DB_PASSWORD
+              value: postgres
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-service
+  namespace: dexmon
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification-service
+  template:
+    metadata:
+      labels:
+        app: notification-service
+    spec:
+      containers:
+        - name: app
+          image: ghcr.io/example/notification-service:latest
+          ports:
+            - containerPort: 8083
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: kafka.dexmon.svc.cluster.local:9092
+            - name: CASSANDRA_CONTACT_POINTS
+              value: cassandra.dexmon.svc.cluster.local
+            - name: CASSANDRA_PORT
+              value: "9042"
+            - name: CASSANDRA_DC
+              value: datacenter1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-archival
+  namespace: dexmon
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: data-archival
+  template:
+    metadata:
+      labels:
+        app: data-archival
+    spec:
+      containers:
+        - name: app
+          image: ghcr.io/example/data-archival:latest
+          ports:
+            - containerPort: 8084
+          env:
+            - name: DB_HOST
+              value: timescaledb.dexmon.svc.cluster.local
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: dexmon
+            - name: DB_USER
+              value: postgres
+            - name: DB_PASSWORD
+              value: postgres
+            - name: S3_BUCKET
+              value: dexmon-archive
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+  namespace: dexmon
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+        - name: app
+          image: ghcr.io/example/api-gateway:latest
+          ports:
+            - containerPort: 8085
+
+
+
+

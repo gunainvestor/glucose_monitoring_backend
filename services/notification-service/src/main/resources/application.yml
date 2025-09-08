@@ -1,0 +1,25 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: notification-service
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+  data:
+    cassandra:
+      contact-points: ${CASSANDRA_CONTACT_POINTS:localhost}
+      port: ${CASSANDRA_PORT:9042}
+      local-datacenter: ${CASSANDRA_DC:datacenter1}
+      keyspace-name: dexmon_alerts
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,prometheus"
+
+
+
+
+
