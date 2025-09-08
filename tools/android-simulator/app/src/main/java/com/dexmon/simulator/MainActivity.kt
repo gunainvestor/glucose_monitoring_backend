@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
                       "eventId": "${UUID.randomUUID()}",
                       "sensorId": "$sensorId",
                       "userId": "$userId",
-                      "timestamp": "${Instant.now()}\u0022,
+                      "timestamp": "${Instant.now()}",
                       "glucoseValue": $value,
                       "source": "SENSOR",
                       "version": 1
