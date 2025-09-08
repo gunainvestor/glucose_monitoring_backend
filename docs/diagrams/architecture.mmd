@@ -1,0 +1,13 @@
+flowchart LR
+  M[Mobile App] -->|REST /api/v1/glucose| R[Glucose Receiver]
+  R -->|produce| K[(Kafka\n(glucose.events))]
+  K --> P[Glucose Processor]
+  K --> N[Notification Service]
+  P --> T[(TimescaleDB)]
+  N --> C[(Cassandra)]
+  A[Data Archival] -->|read >90d| T
+  A -->|Parquet| S3[(S3)]
+  G[API Gateway] -->|query readings| T
+  G -->|query alerts| C
+  P -.DLQ.-> KDLQ[(glucose.events.dlq)]
+  N -.DLQ.-> ADLQ[(glucose.events.alerts.dlq)]

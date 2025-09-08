@@ -1,9 +1,10 @@
-# DexMon Glucose Monitoring Backend Architecture
+# DexMon Glucose Monitoring Backend – Product-Level Architecture
 
 ## Overview
 DexMon ingests CGM readings, processes them in real time with Kafka, stores hot data in TimescaleDB, persists alerts in Cassandra, and archives cold data to S3 for analytics.
 
 ## High-Level Architecture
+(Diagram source: `docs/diagrams/architecture.mmd`)
 ```mermaid
 flowchart LR
   M[Mobile App] -->|REST /api/v1/glucose| R[Glucose Receiver]
